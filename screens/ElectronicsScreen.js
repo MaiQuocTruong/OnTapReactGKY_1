@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ScrollView, TextInput, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView, TextInput, FlatList, TouchableOpacity, StyleSheet, Platform, SafeAreaView } from 'react-native';
 import axios from 'axios';
 import Footer from '../components/Footer';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 export default function ElectronicsScreen() {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedTab, setSelectedTab] = useState('Best Sales');
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [showAllProducts, setShowAllProducts] = useState(false);
@@ -23,42 +24,49 @@ export default function ElectronicsScreen() {
         const productsResponse = await axios.get('https://671168cf4eca2acdb5f4c2fe.mockapi.io/productsOfElectronics');
         setCategories(categoriesResponse.data);
         setProducts(productsResponse.data);
+        setFilteredProducts(productsResponse.data);  // Set initial filteredProducts
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, []);
+
+  // Filter products based on selected category
+  const filterProducts = (categoryId, categoryName) => {
+    setSelectedCategoryId(categoryId);
+    const filtered = products.filter(product => product.name === categoryName);
+    setFilteredProducts(filtered);
+  };
 
   const toggleShowAllProducts = () => {
     setShowAllProducts(!showAllProducts);
   };
 
   return (
+    <SafeAreaView style={styles.safeArea}>
     <View style={styles.container}>
       <ScrollView style={{ width: "100%", height: 500 }}>
-        {/* Header */}
+
         <View style={styles.header}>
           <TouchableOpacity 
             style={styles.backButton} 
             onPress={() => navigation.goBack()}
           >
-            <MaterialIcons name="arrow-back" size={24} color="#000" />
+            <MaterialIcons name="arrow-back" size={24} color="#000"/>
           </TouchableOpacity>
 
           <Text style={styles.headerTitle}>Electronics</Text>
           <TouchableOpacity style={styles.cartButton}>
-          <Ionicons name="cart-outline" size={30} color="#9095a0" />
+            <Ionicons name="cart-outline" size={30} color="#9095a0"/>
           </TouchableOpacity>
 
-          <Image source={require('../assets/img/ava1.png')} style={styles.profileImage} />
+          <Image source={require('../assets/img/ava1.png')} style={styles.profileImage}/>
         </View>
 
-        {/* Search Bar with Sort/Filter Button */}
         <View style={styles.searchContainer}>
           <View style={[styles.searchInputContainer, searchFocused && styles.inputContainerFocused]}>
-            <MaterialIcons name="search" size={20} color="#aaa" style={styles.searchIcon} />
+            <MaterialIcons name="search" size={20} color="#aaa" style={styles.searchIcon}/>
             <TextInput 
               placeholder="Search" 
               style={styles.searchInput} 
@@ -67,12 +75,10 @@ export default function ElectronicsScreen() {
             />
           </View>
           <TouchableOpacity style={styles.sortButton}>
-            <MaterialIcons name="sort" size={20} color="#000" /> {/* Icon for Sort */}
+            <MaterialIcons name="sort" size={20} color="#000"/>
           </TouchableOpacity>
         </View>
 
-
-        {/* Categories Section */}
         <View style={styles.categoriesHeader}>
           <Text style={styles.categoriesTitle}>Categories</Text>
           <TouchableOpacity>
@@ -80,12 +86,11 @@ export default function ElectronicsScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Categories list */}
         <View style={styles.categoryList}>
           {categories.map((category) => (
             <TouchableOpacity
               key={category.id}
-              onPress={() => setSelectedCategoryId(category.id)}
+              onPress={() => filterProducts(category.id, category.name)}
               style={[styles.categoryContainer,
                 category.id === "1" && { backgroundColor: '#D8BFD8' },
                 category.id === "2" && { backgroundColor: '#ADD8E6' },
@@ -103,7 +108,6 @@ export default function ElectronicsScreen() {
           ))}
         </View>
 
-        {/* Tabs */}
         <View style={styles.tabs}>
           {['Best Sales', 'Best Matched', 'Popular'].map((tab) => (
             <TouchableOpacity key={tab} onPress={() => setSelectedTab(tab)}>
@@ -112,9 +116,8 @@ export default function ElectronicsScreen() {
           ))}
         </View>
 
-        {/* Product List */}
         <FlatList
-          data={showAllProducts ? products : products.slice(0, 4)} 
+          data={showAllProducts ? filteredProducts : filteredProducts.slice(0, 4)} 
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.productItem}>
@@ -129,7 +132,7 @@ export default function ElectronicsScreen() {
 
               <View style={styles.priceAndButton}>
                 <TouchableOpacity style={styles.addToCartButton}>
-                  <MaterialIcons name="add" size={20} color="#fff" />
+                  <MaterialIcons name="add" size={20} color="#fff"/>
                 </TouchableOpacity>
                 <Text style={styles.productPrice}>{item.price}</Text>
               </View>
@@ -138,7 +141,6 @@ export default function ElectronicsScreen() {
           contentContainerStyle={styles.productList}
         />
 
-        {/* See All Button */}
         <TouchableOpacity style={styles.seeAllButton} onPress={toggleShowAllProducts}>
           <Text style={styles.seeAllButtonText}>{showAllProducts ? 'See less' : 'See all'}</Text>
         </TouchableOpacity>
@@ -147,7 +149,6 @@ export default function ElectronicsScreen() {
           <Image source={require('../assets/Data/banner.png')} style={styles.staticImage} />
         </View>
 
-        {/* Expanding Pagination Dots */}
         <View style={styles.paginationDots}>
           <Dots
             length={4} 
@@ -161,17 +162,22 @@ export default function ElectronicsScreen() {
         </View>
       </ScrollView>
 
-      {/* Footer */}
-      <Footer />
+      <Footer/>
     </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
     padding: 12,
+    paddingTop: Platform.OS === 'android' ? 25 : 0,
   },
   header: {
     padding: 16,
@@ -191,7 +197,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   cartButton: {
-    marginLeft: 10, // Adjust spacing as needed
+    marginLeft: 10,
     padding: 10,
   },
   profileImage: {

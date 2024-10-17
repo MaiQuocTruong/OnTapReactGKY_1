@@ -1,30 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
 
 export default function LoginScreen() {
   const navigation = useNavigation();
   const [password, setPassword] = useState('');
-  const [isPasswordVisible, setPasswordVisible] = React.useState(false);
+  const [email, setEmail] = useState('');
+  const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false); // State for modal
+  const [loginError, setLoginError] = useState(''); // State for login error message
+
+  // Mảng chứa thông tin đăng nhập
+  const users = [
+    { email: 'maiqtruong2403@gmail.com', password: 'truong2403' },
+    { email: 'user2@example.com', password: 'password2' },
+    { email: 'user3@example.com', password: 'password3' },
+    { email: 'user4@example.com', password: 'password4' },
+    { email: 'user5@example.com', password: 'password5' },
+  ];
+
   const handleLogin = () => {
-    // Logic đăng nhập thành công
-    navigation.navigate('Electronics'); // Chuyển hướng đến HomeScreen sau khi đăng nhập
+    // Kiểm tra thông tin đăng nhập
+    if (!email || !password) {
+      setLoginError('Vui lòng nhập thông tin đầy đủ!');
+      setModalVisible(true); // Hiển thị modal nếu có trường trống
+      return;
+    }
+
+    const user = users.find(user => user.email === email && user.password === password);
+    if (user) {
+      // Đăng nhập thành công
+      navigation.navigate('Electronics');
+    } else {
+      setLoginError('Email hoặc mật khẩu không đúng!'); // Thiết lập thông báo lỗi
+      setModalVisible(true); // Hiển thị modal thông báo lỗi
+    }
   };
+
   const toggleShowPassword = () => {
     setPasswordVisible(!isPasswordVisible);
   };
+
   return (
     <View style={styles.container}>
       {/* Back button */}
       <Ionicons name="arrow-back" size={24} color="black" style={styles.backIcon} />
-      
+
       {/* Logo */}
       <View style={styles.logoContainer}>
-        <Image source={require('../assets/Data/icon.png')} style={styles.logo}/>
+        <Image source={require('../assets/Data/icon.png')} style={styles.logo} />
       </View>
 
       {/* Greeting */}
@@ -41,6 +68,7 @@ export default function LoginScreen() {
           keyboardType="email-address"
           onFocus={() => setEmailFocused(true)}
           onBlur={() => setEmailFocused(false)}
+          onChangeText={setEmail} // Cập nhật email
         />
       </View>
 
@@ -53,12 +81,12 @@ export default function LoginScreen() {
           placeholderTextColor="#aaa"
           secureTextEntry={!isPasswordVisible}
           value={password}
-          onChangeText={setPassword}
+          onChangeText={setPassword} // Cập nhật password
           onFocus={() => setPasswordFocused(true)}
           onBlur={() => setPasswordFocused(false)}
         />
-        <TouchableOpacity onPress={() => setPasswordVisible(!isPasswordVisible)}>
-          <Ionicons name={isPasswordVisible ? "eye-off-outline" : "eye-outline"} size={20} color="gray" style={styles.eyeIcon} onPress={toggleShowPassword}/>
+        <TouchableOpacity onPress={toggleShowPassword}>
+          <Ionicons name={isPasswordVisible ? "eye-off-outline" : "eye-outline"} size={20} color="gray" style={styles.eyeIcon} />
         </TouchableOpacity>
       </View>
 
@@ -71,6 +99,26 @@ export default function LoginScreen() {
       <TouchableOpacity onPress={handleLogin} style={styles.continueButton}>
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>
+
+      {/* Modal for input validation */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>{loginError}</Text> {/* Hiển thị thông báo lỗi */}
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* Or divider */}
       <View style={styles.orContainer}>
@@ -114,8 +162,8 @@ const styles = StyleSheet.create({
   logo: {
     width: 100,
     height: 100,
-    resizeMode: 'contain', 
-  },  
+    resizeMode: 'contain',
+  },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
@@ -138,7 +186,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   inputContainerFocused: {
-    borderColor: '#6C63FF', 
+    borderColor: '#6C63FF',
     borderWidth: 1,
   },
   icon: {
@@ -193,5 +241,32 @@ const styles = StyleSheet.create({
   socialIcon: {
     width: 50,
     height: 44,
-  },  
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: 300,
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButton: {
+    backgroundColor: '#0ad4fa',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
 });

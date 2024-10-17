@@ -1,8 +1,8 @@
 {
     "categoriesOfElectronic": [
-      { "id": "1", "icon": "./assets/Data/smart.png" },
-      { "id": "2", "icon": "./assets/Data/ipad.png" },
-      { "id": "3", "icon": "./assets/Data/macbook.png" }
+      { "id": "1", "name": "Smartphone", "icon": "./assets/Data/smart.png" },
+      { "id": "2", "name": "Ipad", "icon": "./assets/Data/ipad.png" },
+      { "id": "3", "name": "MacBook", "icon": "./assets/Data/macbook.png" }
     ],
     "productsOfElectronics": [
       { "id": "1", "name": "Smartphone", "price": "$899", "rating": 4, "image": "./assets/Data/1.png" },
