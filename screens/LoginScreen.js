@@ -10,8 +10,8 @@ export default function LoginScreen() {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false); // State for modal
-  const [loginError, setLoginError] = useState(''); // State for login error message
+  const [modalVisible, setModalVisible] = useState(false);
+  const [loginError, setLoginError] = useState(''); 
 
   // Mảng chứa thông tin đăng nhập
   const users = [
@@ -46,21 +46,17 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Back button */}
-      <Ionicons name="arrow-back" size={24} color="black" style={styles.backIcon} />
+      <Ionicons name="arrow-back" size={24} color="black" style={styles.backIcon}/>
 
-      {/* Logo */}
       <View style={styles.logoContainer}>
-        <Image source={require('../assets/Data/icon.png')} style={styles.logo} />
+        <Image source={require('../assets/Data/icon.png')} style={styles.logo}/>
       </View>
 
-      {/* Greeting */}
       <Text style={styles.title}>Hello Again!</Text>
       <Text style={styles.subtitle}>Log into your account</Text>
 
-      {/* Email Input */}
       <View style={[styles.inputContainer, emailFocused && styles.inputContainerFocused]}>
-        <Ionicons name="mail-outline" size={20} color="gray" style={styles.icon} />
+        <Ionicons name="mail-outline" size={20} color="gray" style={styles.icon}/>
         <TextInput
           style={styles.input}
           placeholder="Enter your email address"
@@ -72,9 +68,8 @@ export default function LoginScreen() {
         />
       </View>
 
-      {/* Password Input */}
       <View style={[styles.inputContainer, passwordFocused && styles.inputContainerFocused]}>
-        <Ionicons name="lock-closed-outline" size={20} color="gray" style={styles.icon} />
+        <Ionicons name="lock-closed-outline" size={20} color="gray" style={styles.icon}/>
         <TextInput
           style={styles.input}
           placeholder="Enter your password"
@@ -86,21 +81,18 @@ export default function LoginScreen() {
           onBlur={() => setPasswordFocused(false)}
         />
         <TouchableOpacity onPress={toggleShowPassword}>
-          <Ionicons name={isPasswordVisible ? "eye-off-outline" : "eye-outline"} size={20} color="gray" style={styles.eyeIcon} />
+          <Ionicons name={isPasswordVisible ? "eye-off-outline" : "eye-outline"} size={20} color="gray" style={styles.eyeIcon}/>
         </TouchableOpacity>
       </View>
 
-      {/* Forgot Password */}
       <TouchableOpacity>
         <Text style={styles.forgotPassword}>Forgot password?</Text>
       </TouchableOpacity>
 
-      {/* Continue Button */}
       <TouchableOpacity onPress={handleLogin} style={styles.continueButton}>
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>
 
-      {/* Modal for input validation */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -109,7 +101,7 @@ export default function LoginScreen() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>{loginError}</Text> {/* Hiển thị thông báo lỗi */}
+            <Text style={styles.modalText}>{loginError}</Text>
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setModalVisible(false)}
@@ -120,23 +112,21 @@ export default function LoginScreen() {
         </View>
       </Modal>
 
-      {/* Or divider */}
       <View style={styles.orContainer}>
-        <View style={styles.line} />
+        <View style={styles.line}/>
         <Text style={styles.orText}>or</Text>
-        <View style={styles.line} />
+        <View style={styles.line}/>
       </View>
 
-      {/* Social Login Buttons */}
       <View style={styles.socialContainer}>
         <TouchableOpacity style={styles.socialButton}>
-          <Image source={require('../assets/Data/google.png')} style={styles.socialIcon} />
+          <Image source={require('../assets/Data/google.png')} style={styles.socialIcon}/>
         </TouchableOpacity>
         <TouchableOpacity style={styles.socialButton}>
-          <Image source={require('../assets/Data/face.png')} style={styles.socialIcon} />
+          <Image source={require('../assets/Data/face.png')} style={styles.socialIcon}/>
         </TouchableOpacity>
         <TouchableOpacity style={styles.socialButton}>
-          <Image source={require('../assets/Data/apple.png')} style={styles.socialIcon} />
+          <Image source={require('../assets/Data/apple.png')} style={styles.socialIcon}/>
         </TouchableOpacity>
       </View>
     </View>
