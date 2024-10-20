@@ -1,16 +1,28 @@
 {
-    "categoriesOfElectronic": [
-      { "id": "1", "name": "Smartphone", "icon": "./assets/Data/smart.png" },
-      { "id": "2", "name": "Ipad", "icon": "./assets/Data/ipad.png" },
-      { "id": "3", "name": "MacBook", "icon": "./assets/Data/macbook.png" }
-    ],
-    "productsOfElectronics": [
-      { "id": "1", "name": "Smartphone", "price": "$899", "rating": 4, "image": "./assets/Data/1.png" },
-      { "id": "2", "name": "Smartphone", "price": "$899", "rating": 4, "image": "./assets/Data/2.png" },
-      { "id": "3", "name": "Smartphone", "price": "$789", "rating": 4, "image": "./assets/Data/3.png" },
-      { "id": "4", "name": "Smartphone", "price": "$999", "rating": 4, "image": "./assets/Data/4.png" },
-      { "id": "5", "name": "Smartphone", "price": "$999", "rating": 4, "image": "./assets/Data/4.png" },
-      { "id": "6", "name": "Smartphone", "price": "$999", "rating": 4, "image": "./assets/Data/4.png" }
-    ]
-  }
-  
+  "cartItems": [
+    {
+      "id": "1",
+      "name": "Smartphone",
+      "description": "Consequat ex eu",
+      "price": 500,
+      "quantity": 1,
+      "image": "https://i.imgur.com/dSs05cL.png"
+    },
+    {
+      "id": "2",
+      "name": "Smartphone",
+      "description": "Consequat ex eu",
+      "price": 300,
+      "quantity": 1,
+      "image": "https://i.imgur.com/jX3QmQD.png"
+    },
+    {
+      "id": "3",
+      "name": "Smartphone",
+      "description": "Consequat ex eu",
+      "price": 1000,
+      "quantity": 1,
+      "image": "https://i.imgur.com/pxUTAlZ.png"
+    }
+  ]
+}
