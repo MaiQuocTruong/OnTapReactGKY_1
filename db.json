@@ -1,28 +1,22 @@
 {
-  "cartItems": [
+  "paymentMethods": [
     {
-      "id": "1",
-      "name": "Smartphone",
-      "description": "Consequat ex eu",
-      "price": 500,
-      "quantity": 1,
-      "image": "https://i.imgur.com/dSs05cL.png"
+      "id": 1,
+      "type": "Visa",
+      "number": "2334",
+      "brand": "visa"
     },
     {
-      "id": "2",
-      "name": "Smartphone",
-      "description": "Consequat ex eu",
-      "price": 300,
-      "quantity": 1,
-      "image": "https://i.imgur.com/jX3QmQD.png"
+      "id": 2,
+      "type": "MasterCard",
+      "number": "3774",
+      "brand": "mastercard"
     },
     {
-      "id": "3",
-      "name": "Smartphone",
-      "description": "Consequat ex eu",
-      "price": 1000,
-      "quantity": 1,
-      "image": "https://i.imgur.com/pxUTAlZ.png"
+      "id": 3,
+      "type": "PayPal",
+      "email": "abc@gmail.com",
+      "brand": "paypal"
     }
   ]
 }
