@@ -169,7 +169,7 @@ const PaymentScreen = () => {
               <Text style={styles.modalTitle}>Thông báo</Text>
               <Text style={styles.modalMessage}>Vui lòng chọn 1 phương thức thanh toán.</Text>
               <TouchableOpacity style={styles.modalButtonConfirmOnePayment} onPress={closeAlert}>
-                <Text style={styles.modalButtonTextConfirm}>OK</Text>
+                <Text style={styles.modalButtonTextConfirmOnePayment}>OK</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -342,6 +342,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 5,
     width: '100%',
+  },
+  modalButtonTextConfirmOnePayment: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
   modalButtonTextConfirm: {
     color: '#fff',
