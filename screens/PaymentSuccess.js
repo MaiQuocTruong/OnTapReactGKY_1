@@ -50,7 +50,6 @@ const PaymentSuccess = () => {
                     <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                         <MaterialIcons name="arrow-back" size={24} color="#000" />
                     </TouchableOpacity>
-                    <Text style={styles.headerTitle}>Payment Success</Text>
                 </View>
                 {/* Success Icon */}
                 <View style={styles.iconContainer}>
@@ -100,7 +99,7 @@ const PaymentSuccess = () => {
                 <Text style={styles.ratingText}>How was your experience?</Text>
                 <View style={styles.starContainer}>
                     {Array(5).fill(null).map((_, index) => (
-                        <Icon key={index} name="star" size={30} color="#FFB400" />
+                        <Icon key={index} name="star" size={26} color="#FFB400" />
                     ))}
                 </View>
 
@@ -145,12 +144,6 @@ const styles = StyleSheet.create({
     },
     backButton: {
         padding: 10,
-    },
-    headerTitle: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'left',
-        marginLeft: 10,
     },
     iconContainer: {
         marginBottom: 20,
@@ -223,7 +216,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     cardText: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: '500',
     },
     total: {

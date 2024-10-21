@@ -57,7 +57,7 @@ const PaymentScreen = () => {
     setTimeout(() => {
       setLoading(false); // Dừng loading
       navigation.navigate('PaymentSuccess', { selectedMethod: selectedMethodDetails, total });
-    }, 2000);
+    }, 1000);
   };
 
   const cancelPayment = () => {
@@ -168,7 +168,7 @@ const PaymentScreen = () => {
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Thông báo</Text>
               <Text style={styles.modalMessage}>Vui lòng chọn 1 phương thức thanh toán.</Text>
-              <TouchableOpacity style={styles.modalButtonConfirm} onPress={closeAlert}>
+              <TouchableOpacity style={styles.modalButtonConfirmOnePayment} onPress={closeAlert}>
                 <Text style={styles.modalButtonTextConfirm}>OK</Text>
               </TouchableOpacity>
             </View>
@@ -208,6 +208,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   totalText: {
+    paddingVertical: 10,
     fontSize: 16,
     color: '#888',
     textAlign: 'center',
@@ -332,6 +333,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginHorizontal: 5,
+  },
+  modalButtonConfirmOnePayment: {
+    flex: 1,
+    backgroundColor: '#00bdd6',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginHorizontal: 5,
+    width: '100%',
   },
   modalButtonTextConfirm: {
     color: '#fff',
