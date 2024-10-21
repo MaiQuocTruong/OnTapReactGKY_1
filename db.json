@@ -17,6 +17,12 @@
       "type": "PayPal",
       "email": "abc@gmail.com",
       "brand": "paypal"
+    },
+    {
+      "id": 4,
+      "type": "MoMo",
+      "number": "1257",
+      "brand": "momo"
     }
   ]
 }

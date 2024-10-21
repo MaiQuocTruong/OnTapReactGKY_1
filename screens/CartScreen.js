@@ -100,9 +100,12 @@ const CartScreen = () => {
             <Text style={styles.totalPrice}>${total.toFixed(2)}</Text>
           </View>
 
-          <TouchableOpacity style={styles.nextButton} onPress={() => {}}>
+          <TouchableOpacity 
+            style={styles.nextButton} 
+            onPress={() => navigation.navigate('Payment', { total })}>
             <Text style={styles.nextButtonText}>Next</Text>
           </TouchableOpacity>
+
         </ScrollView>
 
         <Modal

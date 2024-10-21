@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // or any other icon family
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function Footer() {
   const [activeTab, setActiveTab] = useState('Home'); // Manage the active tab state

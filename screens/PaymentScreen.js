@@ -8,18 +8,25 @@ import {
     StyleSheet,
     Platform,
     SafeAreaView,
+    Modal,
+    ActivityIndicator, // Thêm import này để sử dụng ActivityIndicator
 } from 'react-native';
 import axios from 'axios';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const PaymentScreen = () => {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedMethod, setSelectedMethod] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isAlertVisible, setAlertVisible] = useState(false);
+  const [loading, setLoading] = useState(false); // Thêm trạng thái loading
   const navigation = useNavigation();
+  const route = useRoute();
+  const total = route.params?.total;
 
   useEffect(() => {
-    axios.get('http://localhost:3000/paymentMethods')
+    axios.get('https://6705de97031fd46a8311369d.mockapi.io/paymentMethods')
       .then(response => {
         setPaymentMethods(response.data);
         const selected = response.data.find(method => method.selected);
@@ -30,6 +37,35 @@ const PaymentScreen = () => {
 
   const handleSelectMethod = (id) => {
     setSelectedMethod(id);
+  };
+
+  const handlePayNow = () => {
+    if (!selectedMethod) {
+      setAlertVisible(true);
+    } else {
+      setModalVisible(true);
+    }
+  };
+
+  const confirmPayment = () => {
+    const selectedMethodDetails = paymentMethods.find(method => method.id === selectedMethod);
+    
+    setModalVisible(false);
+    setLoading(true); // Bắt đầu loading
+
+    // Chờ 2 giây trước khi điều hướng
+    setTimeout(() => {
+      setLoading(false); // Dừng loading
+      navigation.navigate('PaymentSuccess', { selectedMethod: selectedMethodDetails, total });
+    }, 2000);
+  };
+
+  const cancelPayment = () => {
+    setModalVisible(false);
+  };
+
+  const closeAlert = () => {
+    setAlertVisible(false);
   };
 
   const renderPaymentMethod = ({ item }) => {
@@ -43,11 +79,13 @@ const PaymentScreen = () => {
         <Image
           style={styles.logo}
           source={
-            item.brand === 'visa'
+                item.brand === 'visa'
               ? require('../assets/Data/visa.png')
               : item.brand === 'mastercard'
               ? require('../assets/Data/mastercard.png')
-              : require('../assets/Data/paypal.png')
+              : item.brand === 'paypal'
+              ? require('../assets/Data/paypal.png')
+              : require('../assets/Data/momo.png')
           }
         />
         <Text style={styles.cardInfo}>
@@ -62,6 +100,15 @@ const PaymentScreen = () => {
     );
   };
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#00bdd6" />
+        <Text>Đang xử lý thanh toán...</Text>
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -72,8 +119,8 @@ const PaymentScreen = () => {
           <Text style={styles.headerTitle}>Payment</Text>
         </View>
         <Text style={styles.totalText}>TOTAL</Text>
-        <Text style={styles.amountText}>$3,080</Text>
-        
+        <Text style={styles.amountText}>${total?.toFixed(2)}</Text>
+
         <View style={styles.paymentContainer}>
           <FlatList
             data={paymentMethods}
@@ -81,11 +128,52 @@ const PaymentScreen = () => {
             keyExtractor={item => item.id.toString()}
             style={styles.paymentList}
           />
-          <TouchableOpacity style={styles.payButton}>
+          <TouchableOpacity style={styles.payButton} onPress={handlePayNow}>
             <MaterialIcons name="payment" size={24} color="#fff" style={styles.icon}/>
             <Text style={styles.payButtonText}>Pay now</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Modal xác nhận thanh toán */}
+        <Modal
+          transparent={true}
+          animationType="slide"
+          visible={isModalVisible}
+          onRequestClose={cancelPayment}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Xác nhận thanh toán?</Text>
+              <Text style={styles.modalMessage}>Bạn có muốn thanh toán với phương thức này không?</Text>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity style={styles.modalButtonConfirm} onPress={confirmPayment}>
+                  <Text style={styles.modalButtonTextConfirm}>Có</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.modalButtonCancel} onPress={cancelPayment}>
+                  <Text style={styles.modalButtonTextCancel}>Không</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Modal thông báo chọn phương thức thanh toán */}
+        <Modal
+          transparent={true}
+          animationType="slide"
+          visible={isAlertVisible}
+          onRequestClose={closeAlert}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Thông báo</Text>
+              <Text style={styles.modalMessage}>Vui lòng chọn 1 phương thức thanh toán.</Text>
+              <TouchableOpacity style={styles.modalButtonConfirm} onPress={closeAlert}>
+                <Text style={styles.modalButtonTextConfirm}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );
@@ -105,7 +193,7 @@ const styles = StyleSheet.create({
   header: {
     padding: 16,
     flexDirection: 'row',
-    justifyContent: 'flex-start', 
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   backButton: {
@@ -151,7 +239,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   selectedMethod: {
-    borderColor: '#FF5722',
+    borderColor: '#00bdd6',
+    borderWidth: 2,
   },
   logo: {
     width: 50,
@@ -164,17 +253,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   payButton: {
-    backgroundColor: '#FF5722',
+    backgroundColor: '#00bdd6',
     paddingVertical: 12,
     borderRadius: 8,
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
   },
   icon: {
     marginRight: 8,
-  },  
+  },
   payButtonText: {
     color: '#fff',
     fontSize: 18,
@@ -196,7 +285,7 @@ const styles = StyleSheet.create({
   },
   selectedRadioButton: {
     borderWidth: 2,
-    borderColor: '#FF5722',
+    borderColor: '#00bdd6',
   },
   defaultRadioButton: {
     borderWidth: 2,
@@ -206,7 +295,66 @@ const styles = StyleSheet.create({
     height: 14,
     width: 14,
     borderRadius: 7,
-    backgroundColor: '#FF5722',
+    backgroundColor: '#00bdd6',
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalMessage: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  modalButtonConfirm: {
+    flex: 1,
+    backgroundColor: '#00bdd6',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  modalButtonTextConfirm: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  modalButtonCancel: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginHorizontal: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  modalButtonTextCancel: {
+    color: '#888',
+    fontWeight: 'bold',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
