@@ -1,12 +1,14 @@
-import React, { useState } from 'react'; 
+import React, { useState, useContext} from 'react'; 
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import { CartContext } from '../contexts/CartContext';
 
 const ProductDetailScreen = () => {
     const route = useRoute();
     const navigation = useNavigation();
+    const { addToCart } = useContext(CartContext);
     const { product, relatedProducts } = route.params;
     // const [selectedSize, setSelectedSize] = useState(null);
     const [selectedColor, setSelectedColor] = useState(null);
@@ -23,6 +25,11 @@ const ProductDetailScreen = () => {
 
     const priceNumber = parseFloat(product.price.replace('$', '').replace(',', ''));
     const totalPrice = (priceNumber * quantity).toFixed(2);
+
+    const handleAddToCart = () => {
+        addToCart(product, quantity);  
+        navigation.navigate('Cart'); 
+    };
 
     return (
         <ScrollView style={{ width: "100%", height: 500 }}>
@@ -135,7 +142,7 @@ const ProductDetailScreen = () => {
                     <FontAwesome name='chevron-right' size={16} color="#aaa" style={styles.arrowIcon} />
                 </View>
 
-                <TouchableOpacity style={styles.addToCartButton}>
+                <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
                     <Text style={styles.addToCartButtonText}>Add to Cart</Text>
                 </TouchableOpacity>
             </View>

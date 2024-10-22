@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -16,6 +16,12 @@ const PaymentSuccess = () => {
     const route = useRoute();
     const { selectedMethod, total } = route.params;
     const navigation = useNavigation();
+
+    const [rating, setRating] = useState(0); // State to manage selected star rating
+
+    const handleStarPress = (index) => {
+        setRating(index + 1); // Set the rating based on the star clicked
+    };
 
     const renderPaymentMethod = () => {
         if (selectedMethod.type === 'PayPal') {
@@ -99,7 +105,14 @@ const PaymentSuccess = () => {
                 <Text style={styles.ratingText}>How was your experience?</Text>
                 <View style={styles.starContainer}>
                     {Array(5).fill(null).map((_, index) => (
-                        <Icon key={index} name="star" size={26} color="#FFB400" />
+                        <TouchableOpacity key={index} onPress={() => handleStarPress(index)}>
+                            <Icon
+                                name="star"
+                                size={26}
+                                color={index < rating ? "#FFB400" : "#CCCCCC"} // Change color based on rating
+                                style={styles.star}
+                            />
+                        </TouchableOpacity>
                     ))}
                 </View>
 
@@ -239,6 +252,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginBottom: 30,
         justifyContent: 'center',
+    },
+    star: {
+        marginHorizontal: 5,
     },
     button: {
         width: '100%',
