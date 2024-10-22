@@ -1,28 +1,20 @@
 {
-  "paymentMethods": [
+  "products": [
     {
       "id": 1,
-      "type": "Visa",
-      "number": "2334",
-      "brand": "visa"
+      "name": "MacBook",
+      "image": "./assets/Data/macbook.png",
+      "price": 59,
+      "rating": 4.5,
+      "reviews": 99
     },
     {
       "id": 2,
-      "type": "MasterCard",
-      "number": "3774",
-      "brand": "mastercard"
-    },
-    {
-      "id": 3,
-      "type": "PayPal",
-      "email": "abc@gmail.com",
-      "brand": "paypal"
-    },
-    {
-      "id": 4,
-      "type": "MoMo",
-      "number": "1257",
-      "brand": "momo"
+      "name": "MacBook Pro",
+      "image": "./assets/Data/macbook.png",
+      "price": 99,
+      "rating": 4.8,
+      "reviews": 150
     }
   ]
 }

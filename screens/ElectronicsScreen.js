@@ -69,6 +69,15 @@ export default function ElectronicsScreen() {
     setShowAllProducts(!showAllProducts);
   };
 
+  const handleProductPress = (item) => {
+    // Lấy 4 sản phẩm đầu tiên cùng loại
+    const relatedProducts = filteredProducts.filter(product => product.name === item.name).slice(0, 4);
+    navigation.navigate('ProductDetailScreen', {
+      product: item,
+      relatedProducts: relatedProducts,
+    });
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -150,31 +159,24 @@ export default function ElectronicsScreen() {
             <Text style={styles.noProductsText}>No products found</Text>
           ) : (
             <FlatList
-              data={showAllProducts ? filteredProducts : filteredProducts.slice(0, 4)} 
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <View style={styles.productItem}>
-                  <Image source={{ uri: item.image }} style={styles.productImage} />
-                  <View style={styles.productInfo}>
-                    <Text style={styles.productName}>{item.name}</Text>
-                    <Image
-                      source={require('../assets/Data/Rating.png')}
-                      style={styles.ratingImage}
-                    />
-                  </View>
-
-                  <View style={styles.priceAndButton}>
-                    <TouchableOpacity 
-                      style={styles.addToCartButton} 
-                      onPress={() => addToCart(item)} // Add product to cart
-                    >
-                      <MaterialIcons name="add" size={20} color="#fff"/>
-                    </TouchableOpacity>
-                    <Text style={styles.productPrice}>{item.price}</Text>
-                  </View>
-                </View>
-              )}
-              contentContainerStyle={styles.productList}
+            data={showAllProducts ? filteredProducts : filteredProducts.slice(0, 4)} 
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+            <TouchableOpacity style={styles.productItem} onPress={() => handleProductPress(item)}>
+              <Image source={{ uri: item.image }} style={styles.productImage} />
+              <View style={styles.productInfo}>
+                <Text style={styles.productName}>{item.name}</Text>
+                <Image source={require('../assets/Data/Rating.png')} style={styles.ratingImage} />
+              </View>
+              <View style={styles.priceAndButton}>
+                <TouchableOpacity style={styles.addToCartButton} onPress={() => addToCart(item)}>
+                  <MaterialIcons name="add" size={20} color="#fff"/>
+                </TouchableOpacity>
+                <Text style={styles.productPrice}>{item.price}</Text>
+              </View>
+            </TouchableOpacity>
+            )}
+            contentContainerStyle={styles.productList}
             />
           )}
 
